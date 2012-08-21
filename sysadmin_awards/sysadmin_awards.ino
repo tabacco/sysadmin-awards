@@ -1,6 +1,7 @@
 /*
 OpenDNS Sysadmin Awards
  by Dmitriy "Dima" Kumets, a product manager that vastly overestimates how much of his coding skills are still there.
+ and Doug "Doug" Tabacco
  
  Written using the Webduino server library
  https://github.com/sirleech/Webduino
@@ -8,19 +9,32 @@ OpenDNS Sysadmin Awards
  http://www.amazon.com/SainSmart-Serial-Module-Shield-Arduino/dp/B0080DYTZQ/
  
  What can you do?
+
  Send text to the LCD
+   Query string parameters: line1, line2, line3, line4
  Change the LED color 
+   Query String parameters: red=[0-255], green=[0-255], blue=[0-255]
  Make the LED blink
- 
- If it doesn't work? 
- Have you tried turning it off and turning it back on again?
- email me :)
- Examples of what you can do:
- 
+   Query string parameter: blink=[0|1]
+ Enable/Disable the LCD backlight
+   Query string parameter: backlight=[0|1]
+ Write the current state to the EEPROM to use as startup defaults
+   Query string parameter: defaults
+ Clear the EEPROM defaults and return to the award's default state
+   Query string parameter: reset
+
+Note: The maximum length of the query string is 128 bytes due to memory limitations.
+Exceeding 128 bytes will cause an HTTP 500 error to be returned.
+
+If it doesn't work? 
+  Have you tried turning it off and turning it back on again?
+  Submit an issue on Github!
+
+
  Hardware.
  - Arduino Uno
  - Arduino Ethernet shield
- - proto shield or breadboard
+ - proto shield for itnerface
  Pins:
  D3 -> 100 ohm resistor -> Blue LED pin
  D5 -> 100 ohm resistor -> Green LED pin
@@ -31,9 +45,8 @@ OpenDNS Sysadmin Awards
  A4 -> LCD SDA
  A5 -> LCD SCL
  
- 
- 
  */
+
 #include <SPI.h>
 #include <avr/pgmspace.h> 
 #include <Ethernet.h>
