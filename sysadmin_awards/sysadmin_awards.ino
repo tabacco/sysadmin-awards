@@ -505,6 +505,11 @@ void setup()
   pinMode(RedPin, OUTPUT);
   pinMode(GreenPin, OUTPUT);
   pinMode(BluePin, OUTPUT);
+  
+  line4 = "...waiting for DHCP";
+
+  setLedBrightness();
+  screenUpdate();
 
   if(Ethernet.begin(mac) == 1)
   { 
@@ -529,7 +534,6 @@ void setup()
   }
   
   screenUpdate();
-  setLedBrightness();
 
   webserver.begin();  
   webserver.setDefaultCommand(&processHttpRequest);
