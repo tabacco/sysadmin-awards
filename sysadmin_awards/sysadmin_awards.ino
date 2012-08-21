@@ -118,13 +118,19 @@ P(PageOpenMid) = "</small></h1></div>";
 P(PageClose) = "</div></body></html>";
 
 P(RowOpen) = "<div class=\"row\">";
+P(MainColOpen) = "<div class=\"span-two-thirds\">";
 
-P(FormOpen) = "<div class=\"span-two-thirds\"><form method=\"GET\"><fieldset>";
-P(FormClose) = "</fieldset></form></div>";
+P(TextLegend) = "<legend>LCD Display Text</legend>";
+P(OptionsLegend) = "<legend>Misc. Options</legend>";
+P(ColorsLegend) = "<legend>LED Color</legend>";
+
+P(FormOpen) = "<form method=\"GET\"><fieldset>";
+P(FormClose) = "</fieldset></form>";
 
 P(ActionsOpen) = "<div class=\"actions\"><input type=\"submit\" class=\"btn primary\" value=\"Save Settings\">";
-P(SaveDefaultsButton) = " <input type=\"submit\" class=\"btn dan\" name=\"defaults\" value=\"Save as Defaults\">";
+P(SaveDefaultsButton) = " <input type=\"submit\" class=\"btn\" name=\"defaults\" value=\"Save as Defaults\">";
 P(ClearDefaultsButton) = " <a href=\"/?reset=1\" class=\"btn danger\">Clear Defaults</a>";
+P(SetTextButton) = " <input type=\"submit\" class=\"btn primary\" value=\"Set Line Text\">";
 
 
 P(Sidebar) = "<div class=\"span-one-third\"><h3>Congratulations on Winning!</h3>"
@@ -143,7 +149,7 @@ P(LabelClose) = "</label>";
 
 P(InputOpen) = "<div class=\"input\"><input type=\"text\" class=\"xlarge\" name=\"";
 P(InputMid) = "\" value=\"";
-P(InputClose) = "\"></div>";
+P(InputClose) = "\">";
 
 
 P(BlinkOpen) = "<label>LED Blink</label> ";
@@ -264,16 +270,43 @@ void processHttpRequest(WebServer &server, WebServer::ConnectionType type, char 
     server.printP(PageOpenMid);
     
     server.printP(RowOpen);
+    server.printP(MainColOpen);
+
+    server.printP(FormOpen);
+    server.printP(TextLegend);
+    printInput(server, Line1Name, line1, Line1Label, true);
+    server.printP(FormClose);
+
+    server.printP(FormOpen);
+    printInput(server, Line2Name, line2, Line2Label, true);
+    server.printP(FormClose);
+
+    server.printP(FormOpen);
+    printInput(server, Line3Name, line3, Line3Label, true);
+    server.printP(FormClose);
+
+    server.printP(FormOpen);
+    printInput(server, Line4Name, line4, Line4Label, true);
+    server.printP(FormClose);
+
+    server.printP(FormOpen);
+    server.printP(ColorsLegend);
+
+    printInput(server, RedName, String(RedBrightness), RedLabel, false);
+    printInput(server, GreenName, String(GreenBrightness), GreenLabel, false);
+    printInput(server, BlueName, String(BlueBrightness), BlueLabel, false);
+    server.printP(ActionsOpen);
+    server.printP(SaveDefaultsButton);
+    if(hasDefaults)
+    {
+      server.printP(ClearDefaultsButton);
+    }
+    server.printP(DivClose); // end actions
+    server.printP(FormClose);
+
     server.printP(FormOpen);
 
-    printInput(server, RedName, String(RedBrightness), RedLabel);
-    printInput(server, GreenName, String(GreenBrightness), GreenLabel);
-    printInput(server, BlueName, String(BlueBrightness), BlueLabel);
-
-    printInput(server, Line1Name, line1, Line1Label);
-    printInput(server, Line2Name, line2, Line2Label);
-    printInput(server, Line3Name, line3, Line3Label);
-    printInput(server, Line4Name, line4, Line4Label);
+    server.printP(OptionsLegend);
 
     server.printP(ClearfixOpen);
     server.printP(BlinkOpen);
@@ -295,7 +328,9 @@ void processHttpRequest(WebServer &server, WebServer::ConnectionType type, char 
     }
     server.printP(DivClose); // end actions
     server.printP(FormClose);
-    
+
+    server.printP(DivClose); // end main column
+
     server.printP(Sidebar);
     
     server.printP(DivClose); // end row
@@ -305,7 +340,7 @@ void processHttpRequest(WebServer &server, WebServer::ConnectionType type, char 
 
 }
 
-void printInput(WebServer &server, const prog_uchar *name, String value, const prog_uchar *label)
+void printInput(WebServer &server, const prog_uchar *name, String value, const prog_uchar *label, boolean inline_submit)
 {
   server.printP(ClearfixOpen);
   server.printP(LabelOpen);
@@ -316,6 +351,11 @@ void printInput(WebServer &server, const prog_uchar *name, String value, const p
   server.printP(InputMid);
   server.print(value);
   server.printP(InputClose);
+  if(inline_submit)
+  {
+    server.printP(SetTextButton);
+  }
+  server.printP(DivClose);
   server.printP(DivClose);
 }
 
