@@ -60,7 +60,7 @@ OpenDNS Sysadmin Awards
 // Buffer lengths
 #define NAMELEN 10
 #define VALUELEN 64
-#define QSBUFFERLEN 256
+#define QSBUFFERLEN 128
 
 #define LINE_BYTES VALUELEN
 
