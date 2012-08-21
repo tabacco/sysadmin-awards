@@ -57,7 +57,8 @@ If it doesn't work?
 #include <avr/eeprom.h>
 
 // The name of the award category this trophy is for
-#define AWARD "Neat Freak Award"
+#define RECIPIENT "Joe SysAdmin"
+#define AWARD "Award Category"
 
 // "Factory Defaults!"
 #define DEFAULT_RED 0
@@ -65,9 +66,9 @@ If it doesn't work?
 #define DEFAULT_BLUE 0
 #define DEFAULT_BLINK false
 #define DEFAULT_BACKLIGHT true
-#define DEFAULT_LINE1 "SysAdmin of the Year"
-#define DEFAULT_LINE2 "2012"
-#define DEFAULT_LINE3 AWARD
+#define DEFAULT_LINE1 RECIPIENT
+#define DEFAULT_LINE2 AWARD
+#define DEFAULT_LINE3 "2012 SysAdmin Award"
 #define DEFAULT_LINE4 ""
 
 // Buffer lengths
