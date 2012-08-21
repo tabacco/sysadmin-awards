@@ -147,13 +147,15 @@ P(ClearDefaultsButton) = " <a href=\"/?reset=1\" class=\"btn danger\">Clear Defa
 P(SetTextButton) = " <input type=\"submit\" class=\"btn primary\" value=\"Set Line Text\">";
 
 
-P(Sidebar) = "<div class=\"span-one-third\"><h3>Congratulations on Winning!</h3>"
-  "<p>Hi there, contest winner! Congratulations on your victory. You're one of the best of the best, so we hope you'll enjoy this custom-built trophy. You can "
-  "customize the text on the LCD screen or the color of the LED by using the form on the left, or by passing the appropriate query string parameters from a "
-  "script of your own devising.</p>"
-  "<p>The trophy is powered by an Arduino Uno, and the source is available on <a href=\"http://github.com/opendns\">Github</a>. You are, of course, welcome to "
-  "fork the original source or write something completely new if you like. Have fun, and congratulations again on winning!</p>"
-  "</div>";
+P(Sidebar) = "<div class=\"span-one-third\"><h3>Congratulations, Elite SysAdmin!</h3>"
+  "<p>Being named as a 2012 OpenDNS SysAdmin Award winner is a huge achievement, and we're honored to recognize "
+  "you as best in class. This custom-built trophy was created for you by members of the OpenDNS engineering team "
+  "to celebrate your greatness. You can customize the text on the LCD screen or the color of the LED by using the "
+  "form on the left. Or, you can pass the appropriate query string parameters from a script you write yourself.</p>"
+  "<p>The trophy is powered by an Arduino Uno, and the source is available on "
+  "<a href=\"http://github.com/opendns\">Github</a>. You are welcome to fork the original source or write something "
+  "completely new. All we ask is that you take some time to enjoy your new trophy/toy and celebrate your well-"
+  "deserved victory. And once again, a hearty congratulations from our team.</p></div>";
 
 P(ClearfixOpen) = "<div class=\"clearfix\">";
 P(DivClose) = "</div>";
