@@ -76,6 +76,9 @@ If it doesn't work?
 #define VALUELEN 64
 #define QSBUFFERLEN 128
 
+#define LCDWIDTH 20
+#define LCDHEIGHT 4
+
 #define LINE_BYTES VALUELEN
 
 static uint8_t mac[] = { 
@@ -491,7 +494,7 @@ void setup()
   // Load default values for the award from EEPROM or defined constants
   loadDefaults();
   
-  lcd.begin(20, 4);
+  lcd.begin(LCDWIDTH, LCDHEIGHT);
 
   // Switch on the backlight
   lcd.setBacklightPin(BACKLIGHT_PIN, POSITIVE);
@@ -667,7 +670,7 @@ void loop()
       delay(100);
       lcd.print(line1.substring(line1pos, line1pos + 19));
       delay(50);
-      if(line1pos > (line1.length() - 20))
+      if(line1pos > (line1.length() - LCDWIDTH))
       {
         line1pos = 0;
       }
@@ -682,7 +685,7 @@ void loop()
     {
       lcd.setCursor(0,1);
       lcd.print(line2.substring(line2pos,line2pos+19));
-      if(line2pos > (line2.length()-20))
+      if(line2pos > (line2.length()-LCDWIDTH))
       {
         line2pos = 0;     
         delay(50);
@@ -703,7 +706,7 @@ void loop()
       lcd.setCursor(0,2);
       delay(50);
       lcd.print(line3.substring(line3pos,line3pos+19));
-      if(line3pos > (line3.length()-20))
+      if(line3pos > (line3.length()-LCDWIDTH))
       {
         line3pos = 0;
         delay(50);
@@ -724,7 +727,7 @@ void loop()
       lcd.setCursor(0,3);
       lcd.print(line4.substring(line4pos,line4pos+19));
 
-      if(line4pos > (line4.length()-20))
+      if(line4pos > (line4.length()-LCDWIDTH))
       {
         line4pos = 0;
         delay(50);
@@ -744,5 +747,5 @@ void loop()
 }
 
 boolean lineShouldScroll(String line) {
-  return line.length() > 20;
+  return line.length() > LCDWIDTH;
 }
