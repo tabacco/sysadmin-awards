@@ -61,9 +61,9 @@ If it doesn't work?
 #define AWARD "Award Category"
 
 // "Factory Defaults!"
-#define DEFAULT_RED 0
-#define DEFAULT_GREEN 0
-#define DEFAULT_BLUE 0
+#define DEFAULT_RED 255
+#define DEFAULT_GREEN 255
+#define DEFAULT_BLUE 255
 #define DEFAULT_BLINK false
 #define DEFAULT_BACKLIGHT true
 #define DEFAULT_LINE1 RECIPIENT
