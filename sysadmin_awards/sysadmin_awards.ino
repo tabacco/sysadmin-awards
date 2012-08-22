@@ -117,9 +117,6 @@ boolean backlight;
 long lastBlinkMillis = 0;
 long interval = 750;
 
-// Flags - do we need to scroll these lines? If they're long the answer is yes!
-boolean line1scroll,line2scroll,line3scroll,line4scroll = false;
-
 // What is our position in each line for scrolling?
 int line1pos,line2pos,line3pos,line4pos = 0;
 
@@ -552,60 +549,52 @@ void screenUpdate()
     delay(200);
     
     // If the line fits, print it and sleep for 50ms before trying to update next line. Otherwise use the scroll code below
-    if(line1.length()<21)
+    if(!lineShouldScroll(line1))
     {
       delay(50);
       lcd.setCursor (0, 0);  
       delay(50);  
       lcd.print(line1);
       delay(50);
-      line1scroll = false;
     }
     else
-    { 
-      line1scroll = true;
+    {
       line1pos = 0;
     }
 
-    if(line2.length()<21)
+    if(!lineShouldScroll(line2))
     {
       delay(50);
       lcd.setCursor (0, 1);  
       delay(50);
       lcd.print(line2);
-      line2scroll = false;
     }
     else
-    { 
-      line2scroll = true;
+    {
       line2pos = 0;
     }
-    if(line3.length()<21)
+    if(!lineShouldScroll(line3))
     {
       delay(50);
       lcd.setCursor (0, 2);
       delay(50);
       lcd.print(line3);
-      line3scroll = false;
 
     }
     else
     { 
-      line3scroll = true;
       line3pos = 0;
     }
 
-    if(line4.length()<21)
+    if(!lineShouldScroll(line4))
     { 
       lcd.setCursor (0, 3);    
       delay(50);
       lcd.print(line4);
       delay(50);
-      line4scroll= false;
     }
     else
-    { 
-      line4scroll = true;
+    {
       line4pos = 0;
     }
 
@@ -670,7 +659,7 @@ void loop()
     }
     
     // line 1 scrolling
-    if(line1scroll==true)
+    if(lineShouldScroll(line1))
     {
 
 
@@ -689,7 +678,7 @@ void loop()
     }
     
     // line 2 scrolling
-    if(line2scroll==true)
+    if(lineShouldScroll(line2))
     {
       lcd.setCursor(0,1);
       lcd.print(line2.substring(line2pos,line2pos+19));
@@ -708,7 +697,7 @@ void loop()
     }
     
     // line 3 scrolling
-    if(line3scroll==true)
+    if(lineShouldScroll(line3))
     {
       delay(50);
       lcd.setCursor(0,2);
@@ -729,7 +718,7 @@ void loop()
     }
     
     // line 4 scrolling - geez, Why didn't I make this into a function?
-    if(line4scroll==true)
+    if(lineShouldScroll(line4))
     {
 
       lcd.setCursor(0,3);
@@ -752,4 +741,8 @@ void loop()
     lastBlinkMillis = currentMillis;
 
   }
+}
+
+boolean lineShouldScroll(String line) {
+  return line.length() > 20;
 }
