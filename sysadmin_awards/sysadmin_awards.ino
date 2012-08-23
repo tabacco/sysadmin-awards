@@ -106,8 +106,7 @@ int GreenPin = 5;
 // flags for blinking and lcd update trigger
 boolean blinkflag, blinkstate, screenupdate, writeDefaults, clearDefaults, hasDefaults = false;
 
-// Lets define some strings, shall we?
-String line1, line2, line3, line4;
+String lines[LCDHEIGHT];
 
 // intensity of each color.
 int GreenBrightness, RedBrightness, BlueBrightness = 0;
@@ -120,8 +119,8 @@ boolean backlight;
 long lastBlinkMillis = 0;
 long interval = 750;
 
-// What is our position in each line for scrolling?
-int line1pos,line2pos,line3pos,line4pos = 0;
+// Track line scroll positions
+int linePos[LCDHEIGHT] = {0};
 
 // Handy data for building the web form
 P(PageOpen) = "<!DOCTYPE html><html lang=\"en\"><head><title>2012 Sysadmin Award Trophy</title>"
@@ -234,22 +233,22 @@ void processHttpRequest(WebServer &server, WebServer::ConnectionType type, char 
           }
           else if(strcmp(name, "line1") == 0)
           {
-            line1=String(value);
+            lines[0] = String(value);
             screenupdate = true;
           }
           else if(strcmp(name, "line2") == 0)
           {
-            line2=String(value);
+            lines[1] = String(value);
             screenupdate = true;
           }
           else if(strcmp(name, "line3") == 0)
           {
-            line3=String(value);
+            lines[2] = String(value);
             screenupdate = true;
           }
           else if(strcmp(name, "line4") == 0)
           {
-            line4=String(value);
+            lines[3] = String(value);
             screenupdate = true;
           }
           else if(strcmp(name, "blink") == 0)
@@ -290,19 +289,19 @@ void processHttpRequest(WebServer &server, WebServer::ConnectionType type, char 
 
     server.printP(FormOpen);
     server.printP(TextLegend);
-    printInput(server, Line1Name, line1, Line1Label, true);
+    printInput(server, Line1Name, lines[0], Line1Label, true);
     server.printP(FormClose);
 
     server.printP(FormOpen);
-    printInput(server, Line2Name, line2, Line2Label, true);
+    printInput(server, Line2Name, lines[1], Line2Label, true);
     server.printP(FormClose);
 
     server.printP(FormOpen);
-    printInput(server, Line3Name, line3, Line3Label, true);
+    printInput(server, Line3Name, lines[2], Line3Label, true);
     server.printP(FormClose);
 
     server.printP(FormOpen);
-    printInput(server, Line4Name, line4, Line4Label, true);
+    printInput(server, Line4Name, lines[3], Line4Label, true);
     server.printP(FormClose);
 
     server.printP(FormOpen);
@@ -382,9 +381,9 @@ void loadDefaults()
   
   // If it's not 1, use the const 'factory' defaults
   if(hasDefaults == false) {
-   line1 = String(DEFAULT_LINE1);
-   line2 = String(DEFAULT_LINE2);
-   line3 = String(DEFAULT_LINE3);
+   lines[0] = String(DEFAULT_LINE1);
+   lines[1] = String(DEFAULT_LINE2);
+   lines[2] = String(DEFAULT_LINE3);
    RedBrightness = DEFAULT_RED;
    GreenBrightness = DEFAULT_GREEN;
    BlueBrightness = DEFAULT_BLUE;
@@ -400,15 +399,15 @@ void loadDefaults()
   char lineBuf[LINE_BYTES];
 
   eeprom_read_block(lineBuf, (const void*)offset, LINE_BYTES);
-  line1 = String(lineBuf);
+  lines[0] = String(lineBuf);
   offset += LINE_BYTES;
 
   eeprom_read_block(lineBuf, (const void*)offset, LINE_BYTES);
-  line2 = String(lineBuf);
+  lines[1] = String(lineBuf);
   offset += LINE_BYTES;
   
   eeprom_read_block(lineBuf, (const void*)offset, LINE_BYTES);
-  line3 = String(lineBuf);
+  lines[2] = String(lineBuf);
   offset += LINE_BYTES;
   
   free(lineBuf);
@@ -438,15 +437,15 @@ void saveDefaults()
   // Read in the line data from eeprom
   char lineBuf[LINE_BYTES];
   
-  line1.toCharArray(lineBuf, LINE_BYTES);
+  lines[0].toCharArray(lineBuf, LINE_BYTES);
   eeprom_write_block(lineBuf, (void*)offset, LINE_BYTES);
   offset += LINE_BYTES;
   
-  line2.toCharArray(lineBuf, LINE_BYTES);
+  lines[1].toCharArray(lineBuf, LINE_BYTES);
   eeprom_write_block(lineBuf, (void*)offset, LINE_BYTES);
   offset += LINE_BYTES;
   
-  line3.toCharArray(lineBuf, LINE_BYTES);
+  lines[2].toCharArray(lineBuf, LINE_BYTES);
   eeprom_write_block(lineBuf, (void*)offset, LINE_BYTES);
   offset += LINE_BYTES;
   free(lineBuf);
@@ -506,30 +505,30 @@ void setup()
   pinMode(GreenPin, OUTPUT);
   pinMode(BluePin, OUTPUT);
   
-  line4 = "...waiting for DHCP";
+  lines[3] = "...waiting for DHCP";
 
   setLedBrightness();
   screenUpdate();
 
   if(Ethernet.begin(mac) == 1)
   { 
-    line4 = "";
+    lines[3] = "";
     for (byte thisByte = 0; thisByte < 4; thisByte++) {
       
       // print the value of each byte of the IP address:
-      line4 += String(Ethernet.localIP()[thisByte]);
+      lines[3] += String(Ethernet.localIP()[thisByte]);
       
       if(thisByte < 3)
       {
-        line4 += ".";
+        lines[3] += ".";
       }
     }
     Serial.print("My IP address: ");
-    Serial.println(line4);
+    Serial.println(lines[3]);
   }
   else
   {
-    line4 = "No IP Address";
+    lines[3] = "No IP Address";
     Serial.println("No IP Address");
   }
   
@@ -542,65 +541,31 @@ void setup()
 
 void screenUpdate()
 {
-    Serial.println(line1);
-    Serial.println(line2);
-    Serial.println(line3);
-    Serial.println(line4);
+    Serial.println(lines[0]);
+    Serial.println(lines[1]);
+    Serial.println(lines[2]);
+    Serial.println(lines[3]);
   
     lcd.clear();
     // clear the screen and delay to let that command complete
     delay(200);
     
-    // If the line fits, print it and sleep for 50ms before trying to update next line. Otherwise use the scroll code below
-    if(!lineShouldScroll(line1))
-    {
-      delay(50);
-      lcd.setCursor (0, 0);  
-      delay(50);  
-      lcd.print(line1);
-      delay(50);
+    for(int i = 0; i < LCDHEIGHT; i++) {
+      // If the line fits, print it and sleep for 50ms before trying to update next line. Otherwise use the scroll code below
+      if(!lineShouldScroll(lines[i]))
+      {
+        delay(50);
+        lcd.setCursor (0, i);  
+        delay(50);  
+        lcd.print(lines[i]);
+        delay(50);
+      }
+      else
+      {
+        linePos[i] = 0;
+      }
     }
-    else
-    {
-      line1pos = 0;
-    }
-
-    if(!lineShouldScroll(line2))
-    {
-      delay(50);
-      lcd.setCursor (0, 1);  
-      delay(50);
-      lcd.print(line2);
-    }
-    else
-    {
-      line2pos = 0;
-    }
-    if(!lineShouldScroll(line3))
-    {
-      delay(50);
-      lcd.setCursor (0, 2);
-      delay(50);
-      lcd.print(line3);
-
-    }
-    else
-    { 
-      line3pos = 0;
-    }
-
-    if(!lineShouldScroll(line4))
-    { 
-      lcd.setCursor (0, 3);    
-      delay(50);
-      lcd.print(line4);
-      delay(50);
-    }
-    else
-    {
-      line4pos = 0;
-    }
-
+    
     screenupdate = false; 
 }
 
@@ -661,86 +626,23 @@ void loop()
       }
     }
     
-    // line 1 scrolling
-    if(lineShouldScroll(line1))
+    for(int i = 0; i < LCDHEIGHT; i++)
     {
-
-
-      lcd.setCursor(0, 0);
-      delay(100);
-      lcd.print(line1.substring(line1pos, line1pos + 19));
-      delay(50);
-      if(line1pos > (line1.length() - LCDWIDTH))
+      if(lineShouldScroll(lines[i]))
       {
-        line1pos = 0;
-      }
-      else
-      {
-        line1pos += 1;
+        lcd.setCursor(0, i);
+        if(linePos[i] > (lines[i].length() - LCDWIDTH))
+        {
+          linePos[i] = 0;
+        }
+        delay(50);
+        lcd.print(lines[i].substring(linePos[i], linePos[i] + LCDWIDTH));
+        delay(50);
+        
+        linePos[i]++;
       }
     }
     
-    // line 2 scrolling
-    if(lineShouldScroll(line2))
-    {
-      lcd.setCursor(0,1);
-      lcd.print(line2.substring(line2pos,line2pos+19));
-      if(line2pos > (line2.length()-LCDWIDTH))
-      {
-        line2pos = 0;     
-        delay(50);
-        lcd.print("          ");
-        delay(50);
-      }
-      else
-      {
-        line2pos +=1;
-      }
-
-    }
-    
-    // line 3 scrolling
-    if(lineShouldScroll(line3))
-    {
-      delay(50);
-      lcd.setCursor(0,2);
-      delay(50);
-      lcd.print(line3.substring(line3pos,line3pos+19));
-      if(line3pos > (line3.length()-LCDWIDTH))
-      {
-        line3pos = 0;
-        delay(50);
-        lcd.print("          ");
-        delay(50);
-      }
-      else
-      {
-        line3pos +=1;
-      }
-
-    }
-    
-    // line 4 scrolling - geez, Why didn't I make this into a function?
-    if(lineShouldScroll(line4))
-    {
-
-      lcd.setCursor(0,3);
-      lcd.print(line4.substring(line4pos,line4pos+19));
-
-      if(line4pos > (line4.length()-LCDWIDTH))
-      {
-        line4pos = 0;
-        delay(50);
-        lcd.print("          ");
-        delay(50);
-      }
-      else
-      {
-        line4pos +=1;
-      }
-
-    }
-
     lastBlinkMillis = currentMillis;
 
   }
