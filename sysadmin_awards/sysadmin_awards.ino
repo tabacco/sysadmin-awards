@@ -73,8 +73,8 @@ If it doesn't work?
 
 // Buffer lengths
 #define NAMELEN 10
-#define VALUELEN 64
-#define QSBUFFERLEN 128
+#define VALUELEN 40
+#define QSBUFFERLEN 96
 
 #define LCDWIDTH 20
 #define LCDHEIGHT 4
