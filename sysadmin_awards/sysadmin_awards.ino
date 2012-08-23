@@ -569,15 +569,6 @@ void screenUpdate()
     screenupdate = false; 
 }
 
-// Fake a soft reset by reloading the default values
-void softReset()
-{
-  loadDefaults();
-  screenupdate = true;
-  screenUpdate();
-  setLedBrightness();
-}
-
 void loop()
 {
   unsigned long currentMillis = millis();
