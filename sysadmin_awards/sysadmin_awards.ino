@@ -23,8 +23,8 @@ OpenDNS Sysadmin Awards
  Clear the EEPROM defaults and return to the award's default state
    Query string parameter: reset
 
-Note: The maximum length of the query string is 128 bytes due to memory limitations.
-Exceeding 128 bytes will cause an HTTP 500 error to be returned.
+Note: The maximum length of the query string is 96 bytes due to memory limitations.
+Exceeding 96 bytes will cause an HTTP 500 error to be returned.
 
 If it doesn't work? 
   Have you tried turning it off and turning it back on again?
